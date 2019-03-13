@@ -41,3 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3956705071
+    locked: 0
+  - name: Goal
+    uniqueID: 2041989981
+    locked: 0
+  - name: Light
+    uniqueID: 1474750071
+    locked: 0
+  - name: Object
+    uniqueID: 3886742579
+    locked: 0
+  - name: Emoticon
+    uniqueID: 499833145
+    locked: 0
