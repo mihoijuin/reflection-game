@@ -83,8 +83,7 @@ public class AppUtil : MonoBehaviour
         return tween;
     }
 
-    public static Tween MoveRect(RectTransform rect, string from, Vector2 startAnchoredPos, Vector2 endAnchoredPos, float duration, string ease, float delay=0f){
-        /* from："上" */
+    public static Tween MoveRect(RectTransform rect, Vector2 startAnchoredPos, Vector2 endAnchoredPos, float duration, string ease, float delay=0f){
         Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
         rect.anchoredPosition = startAnchoredPos;
         Vector2  targetAnchoredPos = endAnchoredPos;
