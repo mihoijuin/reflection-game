@@ -34,6 +34,10 @@ public class Angle : MonoBehaviour
             switch(currentTurn){
                 case "Light":
                 firstAngle = transform.localEulerAngles.z;
+                currentTurn = "Person2";
+                SlidePos();
+                break;
+                case "Person2":
                 currentTurn = "Mirror1";
                 RotateAngle();
                 break;
@@ -68,6 +72,22 @@ public class Angle : MonoBehaviour
                 new DG.Tweening.Tween[] {
                     AppUtil.Rotate(transform, new Vector3(0f, 0f, 90f), 2f),
                     AppUtil.Rotate(transform, new Vector3(0f, 0f, -90f), 2f)
+                },
+                0f,
+                0f,
+                -1
+            );
+        }
+    }
+
+    private void SlidePos(){
+        if(gameObject.name == currentTurn){
+            Vector3 originPos = transform.position;
+            Vector3 targetPos = new Vector3(originPos.x-10f, originPos.y, originPos.z);
+            angleSequence = AppUtil.DOSequence(
+                new DG.Tweening.Tween[] {
+                    AppUtil.Move(transform, targetPos, 3f),
+                    AppUtil.Move(transform, originPos, 3f),
                 },
                 0f,
                 0f,

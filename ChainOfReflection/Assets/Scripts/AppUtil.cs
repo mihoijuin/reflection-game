@@ -96,4 +96,10 @@ public class AppUtil : MonoBehaviour
         Tween tween = target.DORotate(endValue, duration).SetEase(easeType).SetDelay(delay);
         return tween;
     }
+
+    public static Tween Move(Transform target, Vector3 endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        Tween tween = target.DOMove(endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
 }
