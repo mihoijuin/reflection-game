@@ -8,23 +8,25 @@ public class Angle : MonoBehaviour
 
     private string currentTurn;
 
-    private DG.Tweening.Sequence angleSequence;
+    private DG.Tweening.Sequence angleSequence = null;
 
-    private bool isLightingMode = false;
-    public float firstAngle { get; private set; }
-    public float secondAngle { get; private set; }
-    public float thirdAngle { get; private set; }
-    // private LineRenderer lr;
+    public static float firstAngle { get; set; }
+    public static float secondAngle { get; set; }
+    public static float thirdAngle { get; set; }
 
+    private LightLine lightLine;
+
+    private void Awake(){
+        lightLine = FindObjectOfType<LightLine>();
+    }
 
     private void Start()
     {
         currentTurn = "Light";
+        firstAngle = 360;
+        secondAngle = 360;
+        thirdAngle = 360;
         RotateAngle();
-
-
-        // lr = GetComponent<LineRenderer>();
-        // lr.generateLightingData = true;
 
     }
 
@@ -49,21 +51,10 @@ public class Angle : MonoBehaviour
                 case "Mirror2":
                 thirdAngle = transform.localEulerAngles.z;
                 currentTurn = null;
+                StartCoroutine(lightLine.LightUp());
                 break;
             }
         }
-
-        // Rayを飛ばす
-        // if(isLightingMode){
-        //     firstAngle = lightObject.localEulerAngles.z;
-        //     RaycastHit2D hit1 = Physics2D.Raycast(transform.position, new Vector2(Mathf.Cos(firstAngle*Mathf.Deg2Rad), Mathf.Sin(firstAngle*Mathf.Deg2Rad)));
-        //     if(hit1){
-        //         Debug.DrawRay(transform.position, new Vector2(Mathf.Cos(firstAngle*Mathf.Deg2Rad), Mathf.Sin(firstAngle*Mathf.Deg2Rad)) * 100, Color.blue, 1);
-        //         lr.positionCount = 2;
-        //         lr.SetPosition(0, transform.position);
-        //         lr.SetPosition(1, hit1.point);
-        //     }
-        // }
     }
 
     private void RotateAngle(){
