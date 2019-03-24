@@ -10,7 +10,7 @@ public class AppUtil : MonoBehaviour
         DOTween.useSmoothDeltaTime = true;
     }
 
-    public static Sequence DOSequence(Tween[] tweenArray, float prependInterval, float appendInterval, int loopTime=1){
+    public static Sequence DOSequence(Tween[] tweenArray, float prependInterval, float appendInterval, int loopTime=1, TweenCallback callback=null){
         Sequence sequence = DOTween.Sequence();
         sequence.PrependInterval(prependInterval);
         sequence.AppendInterval(appendInterval);
@@ -18,6 +18,7 @@ public class AppUtil : MonoBehaviour
             sequence.Append(tween);
         }
         sequence.SetLoops(loopTime);
+        sequence.AppendCallback(callback);
         return sequence;
     }
 
@@ -38,12 +39,22 @@ public class AppUtil : MonoBehaviour
         sequence.Kill(complete);
     }
 
+     public static void SetOnCompleteCallback(Tween tween, TweenCallback action){
+        tween.OnComplete(action);
+    }
+
     public static void SetOnKillCallback(Tween tween, TweenCallback action){
         tween.OnKill(action);
     }
 
     public static void SetOnKillCallback(Sequence sequence, TweenCallback action){
         sequence.OnKill(action);
+    }
+
+    public static Tween DOTO(DG.Tweening.Core.DOGetter<Vector3> getter, DG.Tweening.Core.DOSetter<Vector3> setter, Vector3 endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        Tween tween = DOTween.To(getter, setter, endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
     }
 
     public static Tween ShowRect(RectTransform rect, string changeValue, float startValue, float duration, string ease, float delay=0){

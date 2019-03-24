@@ -16,7 +16,7 @@ public class SceneBase : MonoBehaviour
     [SerializeField]
     private float clearAngle3 = 0f;
 
-    LightLine lightLine;
+    private LightLine lightLine;
 
     private void Awake(){
 #if (DEBUG)

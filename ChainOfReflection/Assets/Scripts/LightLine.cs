@@ -46,38 +46,48 @@ public class LightLine : MonoBehaviour
         Debug.Log(hit2.collider.name);
         Debug.Log(hit3.collider.name);
         Debug.Log(hit4.collider.name);
-        // Instantiate(person,  new Vector2(transform.position.x+(hit1.point.x-transform.position.x)*2, Camera.main.ViewportToWorldPoint(new Vector2(0, 0)).y), hit1.transform.rotation);
         int hitCount = 0;
-        if(hit1.collider.name != "Mirror") hitCount += 1;
-        if(hit2.collider.name != "Mirror1") hitCount += 1;
-        if(hit3.collider.name != "Mirror2") hitCount += 1;
-        if(hit4.collider.name != "HitPlace") hitCount += 1;
+        if(hit1.collider.name == "Mirror") hitCount += 1;
+        if(hit2.collider.name == "Mirror1") hitCount += 1;
+        if(hit3.collider.name == "Mirror2") hitCount += 1;
+        if(hit4.collider.name == "HitPlace") hitCount += 1;
 
-        int lineNum = hitCount + 2;
+        // 徐々に光が伸びていく
+        Vector3[] linePointArray = new Vector3[]
+        {
+            transform.position,
+            hit1.point,
+            hit2.point,
+            hit3.point,
+            hit4.point
+        };
+        DG.Tweening.Tween[] tweenArray = new DG.Tweening.Tween[hitCount+1];
+        int lineNum = 0;
+        for (int i = 0; i <= hitCount; i++){
+            tweenArray[i] = AppUtil.DOTO(
+                () => linePointArray[i-1],
+                v =>
+                {
+                    linePointArray[i-1] = v;
+                    lr.SetPosition(lineNum, linePointArray[i-1]);
+                },
+                linePointArray[i],
+                0.5f,
+                "OutExpo",
+                0.8f
+            );
+            if(i < linePointArray.Length-1){
+                AppUtil.SetOnCompleteCallback(tweenArray[i], ()=>{
+                    lineNum++;
+                    lr.positionCount+=1;
+                    lr.SetPosition(lineNum, linePointArray[i-1]);
+                    lr.endWidth += 0.3f;
+                });
+            }
+        }
+        AppUtil.DOSequence(tweenArray, 0f, 0f, 1);
 
-        lr.positionCount = 2;
-        lr.SetPosition(0, transform.position);
-        lr.SetPosition(1, hit1.point);
-        if(hit1.collider.name != "Mirror") yield break;
-        yield return new WaitForSeconds(1f);
-
-        lr.positionCount = 3;
-        // lr.SetPosition(2, new Vector2(transform.position.x+(hit1.point.x-transform.position.x)*2, Camera.main.ViewportToWorldPoint(new Vector2(0, 0)).y));
-        lr.endWidth += 0.2f;
-        lr.SetPosition(2, hit2.point);
-        if(hit2.collider.name != "Mirror1") yield break;
-
-        lr.positionCount = 4;
-        lr.endWidth += 0.2f;
-        lr.SetPosition(3, hit3.point);
-        if(hit3.collider.name != "Mirror2") yield break;
-
-        lr.positionCount = 5;
-        lr.endWidth += 0.2f;
-        lr.SetPosition(4, hit4.point);
-        if(hit4.collider.name != "HitPlace") yield break;
-
-        Debug.Log("goal");
+        if(lineNum == 4) Debug.Log("goal");
         yield break;
     }
 }
