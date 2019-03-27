@@ -18,6 +18,7 @@ public class LightLine : MonoBehaviour
 
     private void Start(){
         hitArray = new RaycastHit2D[SceneBase.moveDataArray.Length];
+        if(SceneBase.isGoalDebugMode) hitArray = new RaycastHit2D[SceneBase.debugLightNum];
     }
 
     private void FixedUpdate(){

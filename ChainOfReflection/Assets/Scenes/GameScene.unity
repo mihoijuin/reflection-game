@@ -551,8 +551,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7207120b975bc4d7b896608a57af5544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGoalDebugMode: 0
-  debugLightNum: 4
+  _isGoalDebugMode: 1
+  _debugLightNum: 4
   clearAngleArray:
   - 50
   - -30

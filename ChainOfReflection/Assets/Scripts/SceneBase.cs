@@ -11,9 +11,11 @@ public class SceneBase : MonoBehaviour
 
     // ゴールデバッグ用
     [SerializeField]
-    private bool isGoalDebugMode = false;
+    private bool _isGoalDebugMode = false;
+    public static bool isGoalDebugMode;
     [SerializeField]
-    private int debugLightNum = 0;
+    private int _debugLightNum = 0;
+    public static int debugLightNum;
     [SerializeField]
     private float[] clearAngleArray = null;
     [SerializeField]
@@ -27,6 +29,10 @@ public class SceneBase : MonoBehaviour
     private DG.Tweening.Sequence angleSequence = null;
 
     private void Awake(){
+        // デバッグチェック
+        isGoalDebugMode = _isGoalDebugMode;
+        debugLightNum = _debugLightNum;
+
         moveDataArray = LoadData();
         angleValueArray = new float[moveDataArray.Length];
         lightLine = FindObjectOfType<LightLine>();
