@@ -36,15 +36,15 @@ public class SceneBase : MonoBehaviour
         moveDataArray = LoadData();
         angleValueArray = new float[moveDataArray.Length];
         lightLine = FindObjectOfType<LightLine>();
-        if(isGoalDebugMode){
-            SetClearRoot();
-        }
 
         AppUtil.InitTween();
     }
 
     private void Start(){
-        if(!isGoalDebugMode){
+        if(isGoalDebugMode){
+            SetClearRoot();
+        } else
+        {
             for(int i=0; i<angleValueArray.Length; ++i){
                 angleValueArray[i] = 360f;
             }
@@ -90,11 +90,11 @@ public class SceneBase : MonoBehaviour
         Invoke("StartLighting", 3f);   // LightLineのhitに値が入るのを待機
     }
 
-    public void RotateAngle(GameObject moveObject){
+    private void RotateAngle(GameObject moveObject){
         angleSequence = AppUtil.DOSequence(
             new DG.Tweening.Tween[] {
-                AppUtil.Rotate(moveObject.transform, new Vector3(0f, 0f, 90f), 2f),
-                AppUtil.Rotate(moveObject.transform, new Vector3(0f, 0f, -90f), 2f)
+                AppUtil.Rotate(moveObject.transform, new Vector3(0f, 0f, 70f), 2f, "OutQuart"),
+                AppUtil.Rotate(moveObject.transform, new Vector3(0f, 0f, -70f), 2f, "OutQuart")
             },
             0f,
             0f,
@@ -102,7 +102,7 @@ public class SceneBase : MonoBehaviour
         );
     }
 
-    public void SlidePos(GameObject moveObject){
+    private void SlidePos(GameObject moveObject){
         moveObject = moveObject.transform.parent.gameObject;
         Vector3 originPos = moveObject.transform.position;
         Vector3 targetPos = new Vector3(originPos.x-10f, originPos.y, originPos.z);
