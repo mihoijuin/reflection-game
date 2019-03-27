@@ -20,7 +20,7 @@ public class LightLine : MonoBehaviour
 
     private void FixedUpdate(){
         // Rayを飛ばす
-        hit1 = DrawRaycast(transform.position, Angle.firstAngle);   // デフォルト右向き
+        hit1 = DrawRaycast(transform.position, SceneBase.angleValueArray[0]);   // デフォルト右向き
         if(hit1){
             float x = transform.position.x+(hit1.point.x-transform.position.x)*2;
             float y = hit1.point.y - transform.position.y;
@@ -29,10 +29,10 @@ public class LightLine : MonoBehaviour
             hit2 = DrawRaycast(hit1.transform.position, hit1Angle); // デフォルト下向き
         }
         if(hit2){
-            hit3 = DrawRaycast(hit2.transform.position, -Angle.secondAngle + 180f); // デフォルト左向き
+            hit3 = DrawRaycast(hit2.transform.position, -SceneBase.angleValueArray[1] + 180f); // デフォルト左向き
         }
         if(hit3){
-            hit4 = DrawRaycast(hit3.transform.position, Angle.thirdAngle);  // デフォルト右向き
+            hit4 = DrawRaycast(hit3.transform.position, SceneBase.angleValueArray[2]);  // デフォルト右向き
         }
     }
 
@@ -50,7 +50,7 @@ public class LightLine : MonoBehaviour
         if(hit1.collider.name == "Mirror") hitCount += 1;
         if(hit2.collider.name == "Mirror1") hitCount += 1;
         if(hit3.collider.name == "Mirror2") hitCount += 1;
-        if(hit4.collider.name == "HitPlace") hitCount += 1;
+        // if(hit4.collider.name == "HitPlace") hitCount += 1;
 
         // 徐々に光が伸びていく
         Vector3[] linePointArray = new Vector3[]
@@ -62,25 +62,31 @@ public class LightLine : MonoBehaviour
             hit4.point
         };
         DG.Tweening.Tween[] tweenArray = new DG.Tweening.Tween[hitCount+1];
-        int lineNum = 0;
-        for (int i = 0; i <= hitCount; i++){
+        // 初期設定
+        lr.SetPosition(0, linePointArray[0]);
+        lr.positionCount += 1;
+        int lineNum = 1;
+        lr.SetPosition(lineNum, linePointArray[0]);
+        // 線を伸ばす
+        for (int i = 0; i < tweenArray.Length; ++i){
+            int index = i;  // なぜかtweenの中ではインクリメントが使用できなかったので新しくint型変数を作成
             tweenArray[i] = AppUtil.DOTO(
-                () => linePointArray[i-1],
+                () => linePointArray[index],
                 v =>
                 {
-                    linePointArray[i-1] = v;
-                    lr.SetPosition(lineNum, linePointArray[i-1]);
+                    linePointArray[index] = v;
+                    lr.SetPosition(lineNum, linePointArray[index]);
                 },
-                linePointArray[i],
+                linePointArray[i+1],
                 0.5f,
                 "OutExpo",
-                0.8f
+                0.5f
             );
-            if(i < linePointArray.Length-1){
+            if(i < tweenArray.Length-1){    // 次のラインのセッティング
                 AppUtil.SetOnCompleteCallback(tweenArray[i], ()=>{
                     lineNum++;
                     lr.positionCount+=1;
-                    lr.SetPosition(lineNum, linePointArray[i-1]);
+                    lr.SetPosition(lineNum, linePointArray[index+1]);
                     lr.endWidth += 0.3f;
                 });
             }
