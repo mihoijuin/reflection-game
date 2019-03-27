@@ -45,7 +45,7 @@ public class LightLine : MonoBehaviour
             string hitName = hitArray[i].collider.name;
             string targetName = SceneBase.moveDataArray[i+1][0];
             Debug.Log(hitName);
-            if(hitName == targetName) hitCount += 1;
+            if(hitName == targetName && hitCount >= i) hitCount += 1;
         }
 
         // 光を伸ばす場所をRayCastから取得
