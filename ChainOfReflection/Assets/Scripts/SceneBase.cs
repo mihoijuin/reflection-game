@@ -15,41 +15,22 @@ public class SceneBase : MonoBehaviour
     [SerializeField]
     private int debugLightNum = 0;
     [SerializeField]
-    float[] clearAngleArray = null;
+    private float[] clearAngleArray = null;
     [SerializeField]
-    float[] clearPosArray = null;
+    private float[] clearPosArray = null;
 
     private LightLine lightLine;
-    private Angle[] angleArray;
 
+    public static string[][] moveDataArray { get; private set; }
     public static float[] angleValueArray { get; private set; }
-
-    private string[] moveObjectArray = {"Light", "Person2", "Mirror1", "Mirror2"};
-    // private string[] directionArray = {"右", "下", "左", "右"};
-    // private string[][] moveDataArray;
 
     private DG.Tweening.Sequence angleSequence = null;
 
-    public static int decideTime { get; private set; }
-
     private void Awake(){
-        // データ
-        // LoadData();
-
-        // 角度を取るオブジェクトの個数分の長さの配列を作成
-        int angleObjectCount = 0;
-        foreach(string moveObject in moveObjectArray){
-            if(moveObject.StartsWith("Person")) continue;
-            angleObjectCount += 1;
-        }
-        angleValueArray = new float[angleObjectCount];
-
-        angleArray = FindObjectsOfType<Angle>();
+        moveDataArray = LoadData();
+        angleValueArray = new float[moveDataArray.Length];
         lightLine = FindObjectOfType<LightLine>();
         if(isGoalDebugMode){
-            foreach(Angle angle in angleArray){
-                angle.enabled = false;
-            }
             SetClearRoot();
         }
 
@@ -61,7 +42,6 @@ public class SceneBase : MonoBehaviour
             for(int i=0; i<angleValueArray.Length; ++i){
                 angleValueArray[i] = 360f;
             }
-            decideTime = angleArray.Length;
             StartCoroutine(DesideAngleAndPos());
         }
     }
@@ -72,48 +52,35 @@ public class SceneBase : MonoBehaviour
         }
     }
 
-    // private void LoadData(){
-    //     moveDataArray = new string[moveObjectArray.Length][];
-    //     for(int i=0; i<moveDataArray.Length; ++i){
-    //         moveDataArray[i] = new string[] {moveObjectArray[i], directionArray[i]};
-    //     }
-    // }
+    private string[][] LoadData(){
+        var data =
+            from x in Resources.Load("TextData").ToString().Split('\n').Skip(1)
+            select x.Split(',');
+        return data.ToArray();
+    }
 
     private IEnumerator DesideAngleAndPos(){
-        foreach(string moveObject in moveObjectArray){
-            Angle moveTarget = null;
-            foreach(Angle angle in angleArray){
-                if(angle.name == moveObject) {
-                    moveTarget = angle;
-                }
-            }
-            if(moveTarget.name.StartsWith("Person")){
-                SlidePos(moveTarget.gameObject);
+        foreach(string[] dataArray in moveDataArray){
+            string name = dataArray[0];
+            string[] moveTarget = dataArray[2].Split('、');
+            if(moveTarget.Contains("なし")) continue;     // 動かす対象がないものはスキップ
+            if(moveTarget.Contains("足場")){    // 足場を動かしたあとに鏡を回転
+                SlidePos(GameObject.Find(name));
+                yield return new WaitUntil(()=> Input.GetMouseButtonDown(0));
+                AppUtil.KillDO(angleSequence, false);
+                yield return new WaitForSeconds(0.1f);
+                RotateAngle(GameObject.Find(name));
             } else
             {
-                RotateAngle(moveTarget.gameObject);
+                RotateAngle(GameObject.Find(name));
             }
             yield return new WaitUntil(()=> Input.GetMouseButtonDown(0));
             AppUtil.KillDO(angleSequence, false);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.1f);  // Kill終了まで待機
         }
 
-        // T全てのオブジェクトの角度決定後に角度を取得する
-        // moveObjectArrayをforeachして回転のものだけangleを参照して入れていく
-        int angleObjectCount = 0;
-        foreach(string moveObject in moveObjectArray){
-            if(!moveObject.StartsWith("Person")){
-                Angle target = null;
-                foreach(Angle angle in angleArray){
-                    if(angle.name == moveObject) {
-                        target = angle;
-                        break;
-                    }
-                }
-                angleValueArray[angleObjectCount] = target.transform.eulerAngles.z;
-                angleObjectCount += 1;
-            }
-        }
+        SetAngles();    // 全てのオブジェクトの角度決定後に角度を取得する
+
         Invoke("StartLighting", 3f);   // LightLineのhitに値が入るのを待機
     }
 
@@ -130,6 +97,7 @@ public class SceneBase : MonoBehaviour
     }
 
     public void SlidePos(GameObject moveObject){
+        moveObject = moveObject.transform.parent.gameObject;
         Vector3 originPos = moveObject.transform.position;
         Vector3 targetPos = new Vector3(originPos.x-10f, originPos.y, originPos.z);
         angleSequence = AppUtil.DOSequence(
@@ -143,23 +111,50 @@ public class SceneBase : MonoBehaviour
         );
     }
 
+    private void SetAngles(){
+        foreach(string[] dataArray in moveDataArray){
+            int index = Array.IndexOf(moveDataArray, dataArray);
+            string name = dataArray[0];
+            string direction = dataArray[1];
+            string[] moveTarget = dataArray[2].Split('、');
+            float targetAngle = GameObject.Find(name).transform.eulerAngles.z;
+            switch(direction){
+                case "右":
+                angleValueArray[index] = targetAngle;
+                break;
+                case "左":
+                angleValueArray[index] = targetAngle+180f;
+                break;
+                case "下":
+                // 入射角から反射角を計算
+                Vector3 prevPos = GameObject.Find(moveDataArray[index-1][0]).transform.position;
+                Vector3 currentPos = GameObject.Find(name).transform.position;
+                float x = prevPos.x+(currentPos.x-prevPos.x)*2;
+                float y = currentPos.y - prevPos.y;
+                float hitAngle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
+                angleValueArray[index] = hitAngle - 180f + hitAngle;
+                break;
+            }
+        }
+    }
+
     private void SetClearRoot(){
-        int posIndexCount = 0;
         int angleIndexCount = 0;
-        for(int i=0; i<debugLightNum; i++){
-            if(moveObjectArray[i].StartsWith("Person")){
-                GameObject moveObject = GameObject.Find(moveObjectArray[i]);
-                moveObject.transform.position = new Vector3(clearPosArray[posIndexCount], moveObject.transform.position.y, moveObject.transform.position.z);
-                posIndexCount += 1;
-            } else
-            {
-                GameObject.Find(moveObjectArray[i]).transform.eulerAngles = new Vector3(0f, 0f, clearAngleArray[angleIndexCount]);
+        int posIndexCount = 0;
+        foreach(string[] dataArray in moveDataArray){
+            if(dataArray[2].Split('、').Contains("本体")){  // 角度回転あり
+                GameObject.Find(dataArray[0]).transform.eulerAngles = new Vector3(0f, 0f, clearAngleArray[angleIndexCount]);
                 angleValueArray[angleIndexCount] = clearAngleArray[angleIndexCount];
                 angleIndexCount += 1;
             }
+            if(dataArray[2].Split('、').Contains("足場")){  // 足場移動あり
+                GameObject moveObject = GameObject.Find(dataArray[0]).transform.parent.gameObject;
+                moveObject.transform.position = new Vector3(clearPosArray[posIndexCount], moveObject.transform.position.y, moveObject.transform.position.z);
+                posIndexCount += 1;
+            }
         }
 
-
+        SetAngles();
         Invoke("StartLighting", 3f);   // LightLineのhitに値が入るのを待機
     }
     private void StartLighting(){

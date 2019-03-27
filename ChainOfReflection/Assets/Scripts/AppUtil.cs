@@ -39,8 +39,12 @@ public class AppUtil : MonoBehaviour
         sequence.Kill(complete);
     }
 
-     public static void SetOnCompleteCallback(Tween tween, TweenCallback action){
+    public static void SetOnCompleteCallback(Tween tween, TweenCallback action){
         tween.OnComplete(action);
+    }
+
+    public static void SetOnCompleteCallback(Sequence sequence, TweenCallback action){
+        sequence.OnComplete(action);
     }
 
     public static void SetOnKillCallback(Tween tween, TweenCallback action){
