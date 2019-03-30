@@ -66,28 +66,37 @@ public class SceneBase : MonoBehaviour
     }
 
     private IEnumerator DesideAngleAndPos(){
+        Transform focusParticle =  GameObject.Find(moveDataArray[0][0]).transform.Find("SelectedParticle");
         foreach(string[] dataArray in moveDataArray){
             string name = dataArray[0];
             string[] moveTarget = dataArray[2].Split('、');
+            GameObject reflection = GameObject.Find(name);
             if(moveTarget.Contains("なし")) continue;     // 動かす対象がないものはスキップ
+            // 注目切り替え
+            yield return AppUtil.WaitDO(AppUtil.Move(focusParticle, focusParticle.position, reflection.transform.position, 1f, "OutQuart"));
+            focusParticle.gameObject.SetActive(false);
+            focusParticle = reflection.transform.Find("SelectedParticle");
+            focusParticle.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.8f);
+            // 動かす
             if(moveTarget.Contains("足場")){    // 足場を動かしたあとに鏡を回転
-                SlidePos(GameObject.Find(name));
+                SlidePos(reflection);
                 yield return new WaitUntil(()=> Input.GetMouseButtonDown(0));
                 AppUtil.KillDO(angleSequence, false);
                 yield return new WaitForSeconds(0.1f);
-                RotateAngle(GameObject.Find(name));
+                RotateAngle(reflection);
             } else
             {
-                RotateAngle(GameObject.Find(name));
+                RotateAngle(reflection);
             }
             yield return new WaitUntil(()=> Input.GetMouseButtonDown(0));
             AppUtil.KillDO(angleSequence, false);
-            yield return new WaitForSeconds(0.1f);  // Kill終了まで待機
+            yield return new WaitForSeconds(0.5f);  // Kill終了まで待機
         }
 
+        focusParticle.gameObject.SetActive(false);
         SetAngles();    // 全てのオブジェクトの角度決定後に角度を取得する
-
-        Invoke("StartLighting", 3f);   // LightLineのhitに値が入るのを待機
+        Invoke("StartLighting", 2f);   // LightLineのhitに値が入るのを待機
     }
 
     private void RotateAngle(GameObject moveObject){
@@ -108,8 +117,8 @@ public class SceneBase : MonoBehaviour
         Vector3 targetPos = new Vector3(originPos.x-10f, originPos.y, originPos.z);
         angleSequence = AppUtil.DOSequence(
             new DG.Tweening.Tween[] {
-                AppUtil.Move(moveObject.transform, targetPos, 3f),
-                AppUtil.Move(moveObject.transform, originPos, 3f),
+                AppUtil.Move(moveObject.transform, moveObject.transform.position, targetPos, 3f),
+                AppUtil.Move(moveObject.transform, moveObject.transform.position, originPos, 3f),
             },
             0f,
             0f,

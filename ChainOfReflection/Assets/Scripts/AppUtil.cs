@@ -98,11 +98,19 @@ public class AppUtil : MonoBehaviour
         return tween;
     }
 
-    public static Tween MoveRect(RectTransform rect, Vector2 startAnchoredPos, Vector2 endAnchoredPos, float duration, string ease, float delay=0f){
+    public static Tween Move(RectTransform target, Vector2 startAnchoredPos, Vector2 endAnchoredPos, float duration, string ease="OutQuad", float delay=0f){
         Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
-        rect.anchoredPosition = startAnchoredPos;
+        target.anchoredPosition = startAnchoredPos;
         Vector2  targetAnchoredPos = endAnchoredPos;
-        Tween tween = rect.DOAnchorPos(targetAnchoredPos, duration).SetEase(easeType).SetDelay(delay);
+        Tween tween = target.DOAnchorPos(targetAnchoredPos, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
+    public static Tween Move(Transform target, Vector2 startPos, Vector2 endPos, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        target.position = startPos;
+        Vector2  targetAnchoredPos = endPos;
+        Tween tween = target.DOMove(targetAnchoredPos, duration).SetEase(easeType).SetDelay(delay);
         return tween;
     }
 
@@ -112,9 +120,4 @@ public class AppUtil : MonoBehaviour
         return tween;
     }
 
-    public static Tween Move(Transform target, Vector3 endValue, float duration, string ease="OutQuad", float delay=0f){
-        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
-        Tween tween = target.DOMove(endValue, duration).SetEase(easeType).SetDelay(delay);
-        return tween;
-    }
 }
