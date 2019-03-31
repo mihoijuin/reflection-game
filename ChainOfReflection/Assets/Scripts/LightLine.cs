@@ -6,10 +6,7 @@ using UnityEngine;
 public class LightLine : MonoBehaviour
 {
     private LineRenderer lr;
-
     private RaycastHit2D[] hitArray;
-
-    public GameObject person;
 
     private void Awake(){
         lr = GetComponent<LineRenderer>();
@@ -47,6 +44,7 @@ public class LightLine : MonoBehaviour
             Debug.Log(hitName);
             if(hitName == targetName && hitCount >= i) hitCount += 1;
         }
+        Debug.Log(hitCount);
 
         // 光を伸ばす場所をRayCastから取得
         Vector3[] linePointArray = new Vector3[hitArray.Length+1];
@@ -59,7 +57,7 @@ public class LightLine : MonoBehaviour
                 linePointArray[i] = transform.position;
             } else
             {
-                if(nameArray.Contains(hitArray[i-1].collider.name)){
+                if(nameArray.Contains(hitArray[i-1].collider.name) || hitArray[i-1].collider.name == "HitPlace"){
                     linePointArray[i] = hitArray[i-1].transform.position;
                 } else
                 {
@@ -99,7 +97,7 @@ public class LightLine : MonoBehaviour
         }
 
         AppUtil.SetOnCompleteCallback(AppUtil.DOSequence(tweenArray, 0f, 0f, 1), ()=>{  // 線を伸ばす&ゴール判定
-            if(hitArray[hitArray.Length-1].collider.name == "HitPlace") Debug.Log("goal");
+            if(hitCount == nameArray.Length-1 && hitArray[hitArray.Length-1].collider.name == "HitPlace") Debug.Log("goal");
         });
 
         yield break;
