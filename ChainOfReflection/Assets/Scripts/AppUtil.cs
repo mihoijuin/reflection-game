@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class AppUtil : MonoBehaviour
@@ -98,6 +99,12 @@ public class AppUtil : MonoBehaviour
         return tween;
     }
 
+    public static Tween Scale(RectTransform rect, Vector2 endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        Tween tween = rect.DOScale(endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
     public static Tween Move(RectTransform target, Vector2 startAnchoredPos, Vector2 endAnchoredPos, float duration, string ease="OutQuad", float delay=0f){
         Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
         target.anchoredPosition = startAnchoredPos;
@@ -114,10 +121,80 @@ public class AppUtil : MonoBehaviour
         return tween;
     }
 
+    public static Tween MoveTo(RectTransform target, Vector2 endPos, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        Tween tween = target.DOAnchorPos(endPos, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
+    public static Tween MoveFrom(RectTransform target, Vector2 startPos, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        Vector2  targetPos = target.anchoredPosition;
+        target.anchoredPosition = startPos;
+        Tween tween = target.DOAnchorPos(targetPos, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
     public static Tween Rotate(Transform target, Vector3 endValue, float duration, string ease="OutQuad", float delay=0f){
         Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
         Tween tween = target.DORotate(endValue, duration).SetEase(easeType).SetDelay(delay);
         return tween;
+    }
+
+    public static Tween FadeIn(Image target, float endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        target.gameObject.SetActive(true);
+        Tween tween = target.DOFade(endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
+    public static Tween FadeOut(Image target, float endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        Tween tween = target.DOFade(endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
+    public static Tween FadeIn(Text target, float endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        target.gameObject.SetActive(true);
+        Tween tween = target.DOFade(endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
+    public static Tween FadeOut(Text target, float endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        Tween tween = target.DOFade(endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
+    public static Sequence Blink(Image target, int blinkTime, float darkAlpha, float blightAlpha, float darkDuration, float blightDuration, string darkEaseType, string blightEaseType, float prependInteval=0f, float appendInteval=0f){
+        target.gameObject.SetActive(true);
+        Tween[] tweenArray = new Tween[blinkTime*2];
+        for(int i=0; i<blinkTime*2;  i+=2){
+            tweenArray[i] = AppUtil.FadeOut(target, darkAlpha, darkDuration, darkEaseType); // dark
+            tweenArray[i+1] = AppUtil.FadeIn(target, blightAlpha, blightDuration, blightEaseType); // blight
+        }
+        Sequence sequence = AppUtil.DOSequence(
+            tweenArray,
+            prependInteval,
+            appendInteval
+        );
+        return sequence;
+    }
+
+    public static Sequence Blink(Text target, int blinkTime, float darkAlpha, float blightAlpha, float darkDuration, float blightDuration, string darkEaseType, string blightEaseType, float prependInteval=0f, float appendInteval=0f){
+        target.gameObject.SetActive(true);
+        Tween[] tweenArray = new Tween[blinkTime*2];
+        for(int i=0; i<blinkTime*2;  i+=2){
+            tweenArray[i] = AppUtil.FadeOut(target, darkAlpha, darkDuration, darkEaseType); // dark
+            tweenArray[i+1] = AppUtil.FadeIn(target, blightAlpha, blightDuration, blightEaseType); // blight
+        }
+        Sequence sequence = AppUtil.DOSequence(
+            tweenArray,
+            prependInteval,
+            appendInteval
+        );
+        return sequence;
     }
 
 }

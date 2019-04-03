@@ -50,12 +50,12 @@ TagManager:
   - name: Light
     uniqueID: 1474750071
     locked: 0
-  - name: LightMask
-    uniqueID: 1726092907
-    locked: 0
   - name: Object
     uniqueID: 3886742579
     locked: 0
   - name: Emoticon
     uniqueID: 499833145
+    locked: 0
+  - name: UI
+    uniqueID: 695316643
     locked: 0

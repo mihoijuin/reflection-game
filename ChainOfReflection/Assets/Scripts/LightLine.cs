@@ -44,7 +44,6 @@ public class LightLine : MonoBehaviour
             Debug.Log(hitName);
             if(hitName == targetName && hitCount >= i) hitCount += 1;
         }
-        Debug.Log(hitCount);
 
         // 光を伸ばす場所をRayCastから取得
         Vector3[] linePointArray = new Vector3[hitArray.Length+1];
