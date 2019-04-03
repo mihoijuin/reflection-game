@@ -29,7 +29,7 @@ MonoBehaviour:
     Duration: 0.3
     EaseType: OutExpo
   - UseTarget: "Tap to start\u8868\u793A\u6697"
-    Delay: 2
+    Delay: 1
     Value: 0
     Duration: 0.4
     EaseType: OutQuart
@@ -37,4 +37,9 @@ MonoBehaviour:
     Delay: 1
     Value: 1
     Duration: 2
+    EaseType: OutQuart
+  - UseTarget: "\u30B9\u30BF\u30FC\u30C8\u753B\u9762\u975E\u8868\u793A"
+    Delay: 0
+    Value: 0
+    Duration: 1
     EaseType: OutQuart

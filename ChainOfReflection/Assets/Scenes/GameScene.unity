@@ -792,6 +792,7 @@ MonoBehaviour:
   opLight: {fileID: 1889863282}
   opCover: {fileID: 1539541762}
   opStartMessage: {fileID: 559599914}
+  opGroup: {fileID: 1646784727}
   _isGoalDebugMode: 0
   _debugLightNum: 4
   clearAngleArray:
@@ -1233,7 +1234,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3, y: 0.5}
+  m_Size: {x: 2.3, y: 0.3}
   m_EdgeRadius: 0
 --- !u!1 &1055062230
 GameObject:
@@ -1531,7 +1532,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1169320989}
   m_Layer: 0
-  m_Name: Title
+  m_Name: OpTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2209,7 +2210,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1576298399}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.68, y: 2.78, z: 0}
+  m_LocalPosition: {x: -7.27, y: 2.78, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1050748923}
@@ -2348,8 +2349,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1646784726}
+  - component: {fileID: 1646784727}
   m_Layer: 0
-  m_Name: OpeningGroup
+  m_Name: OpGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2377,6 +2379,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1646784727
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646784725}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1835727057
 GameObject:
   m_ObjectHideFlags: 0
@@ -2461,7 +2475,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1889863282}
   m_Layer: 0
-  m_Name: Light
+  m_Name: OpLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

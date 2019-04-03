@@ -167,6 +167,19 @@ public class AppUtil : MonoBehaviour
         return tween;
     }
 
+    public static Tween FadeIn(CanvasGroup target, float endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        target.gameObject.SetActive(true);
+        Tween tween = target.DOFade(endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
+    public static Tween FadeOut(CanvasGroup target, float endValue, float duration, string ease="OutQuad", float delay=0f){
+        Ease easeType = (Ease)Enum.Parse(typeof(Ease), ease);
+        Tween tween = target.DOFade(endValue, duration).SetEase(easeType).SetDelay(delay);
+        return tween;
+    }
+
     public static Sequence Blink(Image target, int blinkTime, float darkAlpha, float blightAlpha, float darkDuration, float blightDuration, string darkEaseType, string blightEaseType, float prependInteval=0f, float appendInteval=0f){
         target.gameObject.SetActive(true);
         Tween[] tweenArray = new Tween[blinkTime*2];

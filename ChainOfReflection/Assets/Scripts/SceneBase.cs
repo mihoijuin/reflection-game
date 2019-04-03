@@ -22,6 +22,8 @@ public class SceneBase : MonoBehaviour
     private RectTransform opCover = null;
     [SerializeField]
     private Text opStartMessage = null;
+    [SerializeField]
+    private CanvasGroup opGroup = null;
 
     // ゴールデバッグ用
     [SerializeField]
@@ -110,6 +112,14 @@ public class SceneBase : MonoBehaviour
         string easeType_2 = opParameter.Find(x=> x.UseTarget=="Tap to start表示明").EaseType;
         yield return new WaitForSeconds(delay);
         AppUtil.Blink(opStartMessage, 50, value, value_2, duration, duration_2, easeType, easeType_2, delay_2);
+
+        yield return new WaitUntil(()=> Input.GetMouseButtonDown(0));
+
+        delay = opParameter.Find(x=> x.UseTarget=="スタート画面非表示").Delay;
+        value = opParameter.Find(x=> x.UseTarget=="スタート画面非表示").Value;
+        duration = opParameter.Find(x=> x.UseTarget=="スタート画面非表示").Duration;
+        easeType = opParameter.Find(x=> x.UseTarget=="スタート画面非表示").EaseType;
+        yield return AppUtil.WaitDO(AppUtil.FadeOut(opGroup, value, duration, easeType, delay));
     }
 
     private string[][] LoadData(){
