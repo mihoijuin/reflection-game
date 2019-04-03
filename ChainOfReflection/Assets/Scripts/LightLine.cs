@@ -7,6 +7,7 @@ public class LightLine : MonoBehaviour
 {
     private LineRenderer lr;
     private RaycastHit2D[] hitArray;
+    private string[][] moveDataArray;
 
     private void Awake(){
         lr = GetComponent<LineRenderer>();
@@ -14,18 +15,19 @@ public class LightLine : MonoBehaviour
     }
 
     private void Start(){
-        hitArray = new RaycastHit2D[SceneBase.moveDataArray.Length];
-        if(SceneBase.isGoalDebugMode) hitArray = new RaycastHit2D[SceneBase.debugLightNum];
+        moveDataArray = GameDirector.moveDataArray;
+        hitArray = new RaycastHit2D[moveDataArray.Length];
+        if(GameDirector.isGoalDebugMode) hitArray = new RaycastHit2D[GameDirector.debugLightNum];
     }
 
     private void FixedUpdate(){
         // Rayを飛ばす
         for(int i=0; i<hitArray.Length; ++i){
             if(i == 0) {
-                hitArray[i] = DrawRaycast(transform.position, SceneBase.angleValueArray[i]);
+                hitArray[i] = DrawRaycast(transform.position, Motion.angleValueArray[i]);
             } else
             {
-                if(hitArray[i-1]) hitArray[i] = DrawRaycast(hitArray[i-1].transform.position, SceneBase.angleValueArray[i]);
+                if(hitArray[i-1]) hitArray[i] = DrawRaycast(hitArray[i-1].transform.position, Motion.angleValueArray[i]);
             }
         }
     }
@@ -40,7 +42,7 @@ public class LightLine : MonoBehaviour
         int hitCount = 0;
         for(int i=0; i<hitArray.Length-1; ++i){
             string hitName = hitArray[i].collider.name;
-            string targetName = SceneBase.moveDataArray[i+1][0];
+            string targetName = moveDataArray[i+1][0];
             Debug.Log(hitName);
             if(hitName == targetName && hitCount >= i) hitCount += 1;
         }
@@ -48,7 +50,7 @@ public class LightLine : MonoBehaviour
         // 光を伸ばす場所をRayCastから取得
         Vector3[] linePointArray = new Vector3[hitArray.Length+1];
         var data =
-            from x in SceneBase.moveDataArray
+            from x in moveDataArray
             select x[0];
         string[] nameArray = data.ToArray();
         for(int i=0; i<linePointArray.Length; ++i){
