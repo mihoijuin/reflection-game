@@ -79,8 +79,9 @@ public class GameDirector : MonoBehaviour
 
     private IEnumerator StartGame() {
         if(GameDirector.isGoalDebugMode){
-            yield return new WaitForSeconds(2f);    // LightLineにてhitに値が入るのを待つ
             motion.SetClearRoot();
+            yield return new WaitForSeconds(2f);    // LightLineにてhitに値が入るのを待つ
+            StartLighting();
             yield break;
         }
 

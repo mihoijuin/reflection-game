@@ -1150,7 +1150,7 @@ MonoBehaviour:
   opCover: {fileID: 1539541762}
   opStartMessage: {fileID: 559599914}
   opGroup: {fileID: 1646784727}
-  _isGoalDebugMode: 1
+  _isGoalDebugMode: 0
   _debugLightNum: 4
 --- !u!1 &975239859
 GameObject:
@@ -3197,7 +3197,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -5.2}
+  m_Offset: {x: 0, y: -4}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
