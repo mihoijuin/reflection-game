@@ -21,10 +21,10 @@ MonoBehaviour:
   - UseTarget: "\u30E9\u30A4\u30C8\u5411\u304D\u5909\u66F4"
     Delay: 0.8
     Value: 1
-    Duration: 0.5
+    Duration: 0.4
     EaseType: InOutBack
   - UseTarget: "\u30BF\u30A4\u30C8\u30EB\u8868\u793A"
-    Delay: 0.2
+    Delay: 0
     Value: 1000
     Duration: 0.3
     EaseType: OutExpo
@@ -43,3 +43,8 @@ MonoBehaviour:
     Value: 0
     Duration: 1
     EaseType: OutQuart
+  - UseTarget: "\u30BF\u30A4\u30C8\u30EB\u53CD\u5C04"
+    Delay: 1
+    Value: 450
+    Duration: 1
+    EaseType: InOutQuart

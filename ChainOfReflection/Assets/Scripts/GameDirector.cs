@@ -22,6 +22,8 @@ public class GameDirector : MonoBehaviour
     [SerializeField]
     private RectTransform opCover = null;
     [SerializeField]
+    private RectTransform opTitleReflec = null;
+    [SerializeField]
     private Text opStartMessage = null;
     [SerializeField]
     private CanvasGroup opGroup = null;
@@ -113,6 +115,12 @@ public class GameDirector : MonoBehaviour
         duration = opParameter.Find(x=> x.UseTarget=="タイトル表示").Duration;
         easeType = opParameter.Find(x=> x.UseTarget=="タイトル表示").EaseType;
         yield return AppUtil.WaitDO(AppUtil.Move(opCover, opCover.anchoredPosition, new Vector2(value, opCover.anchoredPosition.y), duration, easeType, delay));
+
+        delay = opParameter.Find(x=> x.UseTarget=="タイトル反射").Delay;
+        value = opParameter.Find(x=> x.UseTarget=="タイトル反射").Value;
+        duration = opParameter.Find(x=> x.UseTarget=="タイトル反射").Duration;
+        easeType = opParameter.Find(x=> x.UseTarget=="タイトル反射").EaseType;
+        yield return AppUtil.WaitDO(AppUtil.Move(opTitleReflec, opTitleReflec.anchoredPosition, new Vector2(value, opTitleReflec.anchoredPosition.y), duration, easeType, delay));
 
         delay = opParameter.Find(x=> x.UseTarget=="Tap to start表示暗").Delay;
         value = opParameter.Find(x=> x.UseTarget=="Tap to start表示暗").Value;
